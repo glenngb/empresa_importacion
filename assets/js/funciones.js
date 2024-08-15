@@ -68,6 +68,10 @@ $(document).ready(function() {
         }
     }
 
+    function rutExiste(rut) {
+        return empresas.some(empresa => empresa.getRut() === rut);
+    }
+
     $('#itemTipo').change(function() {
         const tipo = $(this).val();
         if (tipo === 'empresa') {
@@ -88,10 +92,20 @@ $(document).ready(function() {
     $('#formulario').on('submit', function(e) {
         e.preventDefault();
 
+
+
         const tipo = $('#itemTipo').val();
         if (tipo === 'empresa') {
             const nombre = $('#empresaNombre').val();
             const rut = $('#empresaRut').val();
+        
+        //validar si rut existe
+        if (empresaEditando === null && rutExiste(rut)){
+            alert('El RUT ingresado ya existe. Por favore, ingrese un RUT diferente. ');
+            return; // asi no se agrega nada 
+        }
+
+
             if (nombre && rut) {
                 if (empresaEditando) {
                     empresaEditando.setNombre(nombre);
@@ -221,3 +235,4 @@ $(document).ready(function() {
         }
     });
 });
+
