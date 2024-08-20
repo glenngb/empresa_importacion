@@ -42,8 +42,22 @@ export class Empresa {
         return this._importaciones.reduce((total,importacion) => total + importacion.total,0);
     }
     get importacionesInfo() {
-        return this._importaciones
-    }
+        return {
+            id: this.id,
+            nombre: this.name,
+            rut: this.rut,
+            totalImportaciones: this.TotalImports,
+            totalProductos: this.TotalProducts,
+            totalPrecio: this.totalPrice,
+            importaciones: this.imports.map(importacion =>({
+                id: importacion.id,
+                producto: importacion.product,
+                cantidad: importacion.quantity,
+                precioUnitario: importacion.unitPrice,
+                total: importacion.total
+            }))
+        }
+    }  
 };
 
 export class Importacion {
