@@ -1,4 +1,5 @@
 import { Empresa,Importacion  } from "./Clases.js";
+import { currentFormatter } from "./currentFormat.js";
 
 function generateId(){
     return Math.random().toString(36).substring(2,15) + Math.random().toString(36).substring(2,15)
@@ -146,17 +147,22 @@ document.addEventListener('DOMContentLoaded',()=>{
         empresas.forEach(empresa =>{
             const fila = document.createElement('tr');
 
+            //Dar formato de moneda
+            const currency = 'CLP';
+            const locale = 'es-CL';
+
             fila.innerHTML = `
                 <td>${empresa.id}</td>
                 <td>${empresa.name}</td>
                 <td>${empresa.rut}</td>
                 <td>${empresa.TotalImports}</td>
                 <td>${empresa.TotalProducts}</td>
+                <td>${currentFormatter(empresa.totalPrice,currency,locale)}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm editarEmpresa" data-id="${empresa.id}">
+                    <button class="btn btn-warning btn-sm edit-empresa" data-id="${empresa.id}">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button class="btn btn-danger btn-sm eliminarEmpresa" data-id="${empresa.id}">
+                    <button class="btn btn-danger btn-sm delete-empresa" data-id="${empresa.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -165,13 +171,15 @@ document.addEventListener('DOMContentLoaded',()=>{
         });
 
         // Agregar eventos a los botones de editar y eliminar
-        document.querySelectorAll('.editarEmpresa').forEach(btn => {
+        document.querySelectorAll('.edit-empresa').forEach(btn => {
             btn.addEventListener('click', editarEmpresa);
         });
 
-        document.querySelectorAll('.eliminarEmpresa').forEach(btn => {
+        document.querySelectorAll('.delete-empresa').forEach(btn => {
             btn.addEventListener('click', eliminarEmpresa);
         });
+
+        
 
         console.log("Tabla de empresas actualizada.");
     };
@@ -183,20 +191,58 @@ document.addEventListener('DOMContentLoaded',()=>{
         const empresaId = event.target.getAttribute('data-id');
         const empresa = empresas.find(empresa => empresa.id === empresaId);
 
-        Swal.fire({
-            title: 'Editar empresa',
-            text: `Aquí podrías implementar un formulario de edición para la empresa ${empresa.name}.`,
-            icon: 'info',
-            showConfirmButton: true,
-        })
+        if (empresa) {
+            Swal.fire({
+                title: 'Editar Empresa',
+                html: `
+                    <div class="form-group">
+                        <label for="editEmpresaNombre">Nombre de la Empresa</label>
+                        <input type="text" id="editEmpresaNombre" class="form-control" value="${empresa.name}">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="editEmpresaRut">RUT de la Empresa</label>
+                        <input type="text" id="editEmpresaRut" class="form-control" value="${empresa.rut}">
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Guardar cambios',
+                cancelButtonText: 'Cancelar',
+                preConfirm: () => {
+                    const newName = document.getElementById('editEmpresaNombre').value;
+                    const newRut = document.getElementById('editEmpresaRut').value;
+    
+                    if (!newName || !newRut) {
+                        Swal.showValidationMessage('Por favor, complete todos los campos.');
+                    }
+    
+                    return { newName, newRut };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const { newName, newRut } = result.value;
+                    empresa.name = newName;
+                    empresa.rut = newRut;
+    
+                    actualizarTablaEmpresas();
+    
+                    Swal.fire(
+                        'Actualizado!',
+                        'Los detalles de la empresa han sido actualizados.',
+                        'success'
+                    );
+                }
+            });
+        }
+
     };
 
     // función para eliminar una empresa
     function eliminarEmpresa(event) {
         const empresaId = event.target.getAttribute('data-id');
+        const empresa = empresas.find(emp => emp.id === empresaId);
         Swal.fire({
             title: '¿Estás seguro?',
-            text: "No podrás revertir esta acción",
+            text: `Quieres eliminar la empresa ${empresa.name}`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -206,6 +252,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         }).then((result) => {
             if (result.isConfirmed) {
                 empresas = empresas.filter(empresa => empresa.id !== empresaId);
+
+                //Actualizando la tabla
                 actualizarTablaEmpresas();
 
                 Swal.fire({
@@ -219,5 +267,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 console.log("Empresa eliminada:", empresaId);
             }
         });
-    }
+    };
+
+    
 })
