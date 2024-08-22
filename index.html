@@ -55,7 +55,7 @@
         </form>
 
         <h2>Empresas e Importaciones</h2>
-        <table id="resultadosTable" class="display">
+        <table id="resultadosTable" class="table table-bordered mt-4">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -66,7 +66,8 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="empresaTableBody"
+            ></tbody>
         </table>
     </div>
 
@@ -74,6 +75,9 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/funciones.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Custom JS -->
     <script type="module" src="assets/js/script.js"></script>
