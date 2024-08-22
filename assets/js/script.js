@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             const nombre = document.getElementById('empresaNombre').value;
             const rut = document.getElementById('empresaRut').value;
 
+            //Validar los inputs
+            if(!validateEmpresaInputs(nombre, rut)) return;
             //Crear una nueva instancia de empresa
             const nuevaEmpresa = new Empresa(generateId(), nombre, rut)
             empresas.push(nuevaEmpresa);
@@ -268,6 +270,18 @@ document.addEventListener('DOMContentLoaded',()=>{
             }
         });
     };
+
+    function validateEmpresaInputs(name, rut) {
+        if (!name.trim() || !rut.trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campos vacíos',
+                text: 'Por favor, complete todos los campos antes de continuar.',
+            });
+            return false;
+        }
+        return true;
+    }
 
     
 })

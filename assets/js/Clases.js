@@ -49,6 +49,8 @@ export class Empresa {
             totalImportaciones: this.TotalImports,
             totalProductos: this.TotalProducts,
             totalPrecio: this.totalPrice,
+            rubro: this.rubro,
+            tamanio: this.size,
             importaciones: this.imports.map(importacion =>({
                 id: importacion.id,
                 producto: importacion.product,
@@ -91,5 +93,26 @@ export class Importacion {
 
     get total() {
         return this._quantity * this._unitPrice
+    }
+}
+
+//Agregando sub-clase para requisito del trabajo 3
+export class Importador extends Empresa {
+    constructor(id,name,rut,rubro,size){
+        super(id,name,rut);
+        this._rubro =rubro;
+        this._size = size;
+    };
+
+    //Getters
+    get rubro() {return this._rubro};
+    get size() {return this._size};
+
+    //Setters
+    set rubro(newRubro){
+        this._rubro = newRubro;
+    };
+    set size(newSize){
+        this._size = newSize;
     }
 }
