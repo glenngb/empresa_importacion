@@ -1,4 +1,4 @@
-import { Empresa,Importacion  } from "./Clases.js";
+import { Empresa,Importacion,Importador } from "./Clases.js";
 import { currentFormatter } from "./currentFormat.js";
 
 function generateId(){
@@ -59,14 +59,18 @@ document.addEventListener('DOMContentLoaded',()=>{
 
         if(selectdType === 'empresa'){
             //Obtener los valores del campo empresa
+            const id = generateId();
             const nombre = document.getElementById('empresaNombre').value;
             const rut = document.getElementById('empresaRut').value;
+            const rubro = document.getElementById('empresaRubro').value;
+            const tamanio = document.getElementById('empresaSize').value;
 
             //Validar los inputs
-            if(!validateEmpresaInputs(nombre, rut)) return;
+            if(!validateEmpresaInputs(nombre, rut, rubro, tamanio)) return;
             //Crear una nueva instancia de empresa
-            const nuevaEmpresa = new Empresa(generateId(), nombre, rut)
-            empresas.push(nuevaEmpresa);
+           // const nuevaEmpresa = new Empresa(generateId(), nombre, rut)
+           const nuevaEmpresa = new Importador(id, nombre, rut, rubro, tamanio);
+           empresas.push(nuevaEmpresa);
 
             console.log("Empresa agregada:", nuevaEmpresa);
             console.log('lista de empresas:', empresas);
@@ -160,6 +164,8 @@ document.addEventListener('DOMContentLoaded',()=>{
                 <td>${empresa.TotalImports}</td>
                 <td>${empresa.TotalProducts}</td>
                 <td>${currentFormatter(empresa.totalPrice,currency,locale)}</td>
+                <td>${empresa.rubro}</td>
+                <td>${empresa.size}</td>
                 <td>
                     <button class="btn btn-warning btn-sm edit-empresa" data-id="${empresa.id}">
                         <i class="fas fa-pencil-alt"></i>
@@ -271,8 +277,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         });
     };
 
-    function validateEmpresaInputs(name, rut) {
-        if (!name.trim() || !rut.trim()) {
+    function validateEmpresaInputs(name, rut, rubro, tamanio) {
+        if (!name.trim() || !rut.trim() || !rubro.trim() || !tamanio.trim()) {
             Swal.fire({
                 icon: 'error',
                 title: 'Campos vacíos',
