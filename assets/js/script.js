@@ -1,15 +1,15 @@
-import { Empresa,Importacion,Importador } from "./Clases.js";
+import { Empresa, Importacion, Importador } from "./Clases.js";
 import { currentFormatter } from "./currentFormat.js";
 
-function generateId(){
-    return Math.random().toString(36).substring(2,15) + Math.random().toString(36).substring(2,15)
+function generateId() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 }
 
 //Creando Empresas
 const empresa1 = new Empresa(generateId(), 'Las Cabras', '12.345.678-3');
 const importacion1 = new Importacion(generateId(), 'Queso Gauda', 10, 1000);
-const importacion2 = new Importacion(generateId(), 'Queso Chanco', 50,2000);
-const importacion3 = new Importacion(generateId(), 'Tomates', 100,1000);
+const importacion2 = new Importacion(generateId(), 'Queso Chanco', 50, 2000);
+const importacion3 = new Importacion(generateId(), 'Tomates', 100, 1000);
 
 empresa1.addImport(importacion1);
 empresa1.addImport(importacion2);
@@ -19,11 +19,11 @@ empresa1.addImport(importacion3);
 console.log('Total de importaciones: ', empresa1.TotalImports);
 console.log('Total de Productos: ', empresa1.TotalProducts);
 console.log('Total Precio: ', empresa1.totalPrice);
-console.log('Importaciones',empresa1.importacionesInfo);
+console.log('Importaciones', empresa1.importacionesInfo);
 
 //Parte 2 de trabajo manejo de formularios
 
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded', () => {
     const itemTipo = document.getElementById('itemTipo');
     const empresaFields = document.getElementById('empresaFields');
     const importacionFields = document.getElementById('importacionFields');
@@ -35,29 +35,29 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
     //Detectando los cambios de tipo en select
-    itemTipo.addEventListener('change', () =>{
+    itemTipo.addEventListener('change', () => {
         const selectdType = itemTipo.value;
 
         //Mostrar u ocultar campos basados en la selección
-        if(selectdType === 'empresa'){
+        if (selectdType === 'empresa') {
             empresaFields.classList.remove('d-none');
             importacionFields.classList.add('d-none');
-        } else if(selectdType === 'importacion'){
+        } else if (selectdType === 'importacion') {
             empresaFields.classList.add('d-none');
             importacionFields.classList.remove('d-none');
-        }else{
+        } else {
             empresaFields.classList.add('d-none');
             importacionFields.classList.add('d-none');
         }
     });
 
     //Manejo del formulario
-    formulario.addEventListener('submit', (event) =>{
+    formulario.addEventListener('submit', (event) => {
         event.preventDefault();
 
         const selectdType = itemTipo.value;
 
-        if(selectdType === 'empresa'){
+        if (selectdType === 'empresa') {
             //Obtener los valores del campo empresa
             const id = generateId();
             const nombre = document.getElementById('empresaNombre').value;
@@ -66,11 +66,11 @@ document.addEventListener('DOMContentLoaded',()=>{
             const tamanio = document.getElementById('empresaSize').value;
 
             //Validar los inputs
-            if(!validateEmpresaInputs(nombre, rut, rubro, tamanio)) return;
+            if (!validateEmpresaInputs(nombre, rut, rubro, tamanio)) return;
             //Crear una nueva instancia de empresa
-           // const nuevaEmpresa = new Empresa(generateId(), nombre, rut)
-           const nuevaEmpresa = new Importador(id, nombre, rut, rubro, tamanio);
-           empresas.push(nuevaEmpresa);
+            // const nuevaEmpresa = new Empresa(generateId(), nombre, rut)
+            const nuevaEmpresa = new Importador(id, nombre, rut, rubro, tamanio);
+            empresas.push(nuevaEmpresa);
 
             console.log("Empresa agregada:", nuevaEmpresa);
             console.log('lista de empresas:', empresas);
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 timer: 2000,
                 timerProgressBar: true
             })
-        }else if (selectdType === 'importacion'){
+        } else if (selectdType === 'importacion') {
             //Obtenemos los valores de los campos de importación
             const producto = document.getElementById('importacionProducto').value;
             const cantidad = parseInt(document.getElementById('importacionCantidad').value);
@@ -101,14 +101,14 @@ document.addEventListener('DOMContentLoaded',()=>{
             //Buscamos la empresa seleccionada
             const empresaSeleccionada = empresas.find(empresa => empresa.id === empresaId);
 
-            if(empresaSeleccionada) {
+            if (empresaSeleccionada) {
                 //Creamos una nueva instancia de importación
-                const nuevaImportacion = new Importacion(generateId(),producto,cantidad,precio);
+                const nuevaImportacion = new Importacion(generateId(), producto, cantidad, precio);
 
                 //añadimos la importación a la empresa
                 empresaSeleccionada.addImport(nuevaImportacion);
 
-                console.log("Importación agregada:",nuevaImportacion);
+                console.log("Importación agregada:", nuevaImportacion);
                 console.log('Importacioones de la empresa:', empresaSeleccionada.imports);
 
                 //Actualizar la tabla
@@ -123,9 +123,9 @@ document.addEventListener('DOMContentLoaded',()=>{
                     timer: 2000,
                     timerProgressBar: true
                 })
-            } else{
+            } else {
                 Swal.fire({
-                    title:'Error: Empresa no seleccionada o no encontrada.',
+                    title: 'Error: Empresa no seleccionada o no encontrada.',
                     icon: 'error',
                 })
             }
@@ -134,9 +134,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
     //Función para actualizar el select de empresas
-    function actualizarEmpresaSelect(){
+    function actualizarEmpresaSelect() {
         empresaSelect.innerHTML = `<option value="" disabled selected>Seleccione una empresa</option>`;
-        empresas.forEach(empresa =>{
+        empresas.forEach(empresa => {
             const option = document.createElement('option');
             option.value = empresa.id;
             option.textContent = `${empresa.name} (${empresa.rut})`;
@@ -147,10 +147,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
 
     //Función para actualizar la tabla de empresas.
-    function actualizarTablaEmpresas(){
+    function actualizarTablaEmpresas() {
         empresaTableBody.innerHTML = ''; //Limpiamos la tabla
 
-        empresas.forEach(empresa =>{
+        empresas.forEach(empresa => {
             const fila = document.createElement('tr');
 
             //Dar formato de moneda
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 <td>${empresa.rut}</td>
                 <td>${empresa.TotalImports}</td>
                 <td>${empresa.TotalProducts}</td>
-                <td>${currentFormatter(empresa.totalPrice,currency,locale)}</td>
+                <td>${currentFormatter(empresa.totalPrice, currency, locale)}</td>
                 <td>${empresa.rubro}</td>
                 <td>${empresa.size}</td>
                 <td>
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             btn.addEventListener('click', eliminarEmpresa);
         });
 
-        
+
 
         console.log("Tabla de empresas actualizada.");
     };
@@ -218,11 +218,11 @@ document.addEventListener('DOMContentLoaded',()=>{
                 preConfirm: () => {
                     const newName = document.getElementById('editEmpresaNombre').value;
                     const newRut = document.getElementById('editEmpresaRut').value;
-    
+
                     if (!newName || !newRut) {
                         Swal.showValidationMessage('Por favor, complete todos los campos.');
                     }
-    
+
                     return { newName, newRut };
                 }
             }).then((result) => {
@@ -230,9 +230,9 @@ document.addEventListener('DOMContentLoaded',()=>{
                     const { newName, newRut } = result.value;
                     empresa.name = newName;
                     empresa.rut = newRut;
-    
+
                     actualizarTablaEmpresas();
-    
+
                     Swal.fire(
                         'Actualizado!',
                         'Los detalles de la empresa han sido actualizados.',
@@ -289,5 +289,27 @@ document.addEventListener('DOMContentLoaded',()=>{
         return true;
     }
 
-    
 })
+
+function adjustFooter() {
+    const footer = document.getElementById('sticky-footer');
+    const body = document.body;
+    const html = document.documentElement;
+
+    const height = Math.max(body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+    if (height > window.innerHeight) {
+        footer.classList.remove('fixed-bottom');
+    } else {
+        footer.classList.add('fixed-bottom');
+    }
+}
+
+// Ejecutar cuando la página se carga
+window.addEventListener('load', adjustFooter);
+
+// Ejecutar cuando la ventana cambia de tamaño
+window.addEventListener('resize', adjustFooter);
+
+// Si tienes contenido que se carga dinámicamente, llama a adjustFooter() después de cargar el contenido

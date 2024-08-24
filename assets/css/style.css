@@ -1,0 +1,7 @@
+/* Asegura que el contenido principal tenga un padding inferior 
+   para evitar que el footer lo cubra en pantallas pequeñas */
+    @media (max-width: 767.98px) {
+    main {
+        padding-bottom: 60px; /* Ajusta este valor según la altura de tu footer */
+    }
+}
